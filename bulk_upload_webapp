@@ -13,8 +13,8 @@ from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
-UPLOAD_FOLDER = './static'
-ALLOWED_EXTENSIONS = set(['csv'])
+UPLOAD_FOLDER = './uploads' #where upload file send to
+ALLOWED_EXTENSIONS = set(['csv']) #restrict file type only csv
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 @app.route('/', methods=['GET'])
@@ -32,11 +32,8 @@ def send():
         if csv_file and allowed_file(csv_file.filename):
             filename = secure_filename(csv_file.filename)
             csv_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            #csv_url = '/uploads/' + filename
             csv_url = app.config['UPLOAD_FOLDER'] + '/' + filename
-            abspath  = os.path.abspath(filename)
-            print(csv_url)
-            print(abspath)
+            #print(csv_url)
                         
             address = "10.71.132.226"
             username = "admin"
