@@ -1,0 +1,90 @@
+import requests
+import csv
+import json
+from requests.auth import HTTPBasicAuth
+from getpass import getpass
+import os
+from flask import Flask, render_template, request, redirect, url_for, send_from_directory, session
+from werkzeug.utils import secure_filename
+
+#address = input("Enter IP Address of the FMC: ")"
+#username = input ("Enter Username: ")
+#password = getpass("Enter Password: ")
+
+app = Flask(__name__)
+
+UPLOAD_FOLDER = './static'
+ALLOWED_EXTENSIONS = set(['csv'])
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+@app.route('/', methods=['GET'])
+def login():
+    return render_template("index.html")
+
+def allowed_file(filename):
+    return '.' in filename and \
+        filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
+@app.route('/send', methods=['GET', 'POST'])
+def send():
+    if request.method == 'POST':
+        csv_file = request.files['csv_file']
+        if csv_file and allowed_file(csv_file.filename):
+            filename = secure_filename(csv_file.filename)
+            csv_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            #csv_url = '/uploads/' + filename
+            csv_url = app.config['UPLOAD_FOLDER'] + '/' + filename
+            abspath  = os.path.abspath(filename)
+            print(csv_url)
+            print(abspath)
+                        
+            address = "10.71.132.226"
+            username = "admin"
+            password = "C1sco12345!"
+            api_uri = "/api/fmc_platform/v1/auth/generatetoken"
+            url = "https://" + address + api_uri
+            
+            response = requests.request("POST", url, verify=False, auth=HTTPBasicAuth(username, password))
+            
+            accesstoken = response.headers["X-auth-access-token"]
+            refreshtoken = response.headers["X-auth-refresh-token"]
+            DOMAIN_UUID = response.headers["DOMAIN_UUID"]
+            
+            #csvFilePath = input("fmc/objects.csv")
+            csvFilePath = csv_url
+            
+            host = []
+            
+            with open(csvFilePath, encoding='utf-8-sig') as csvf:
+            	csvReader = csv.DictReader(csvf)
+            	
+            	for rows in csvReader:
+            		if rows['type'] == "Host":
+            			host.append(rows)
+            			host_payload = json.dumps(host)
+            	
+            	host_api_uri = "/api/fmc_config/v1/domain/" + DOMAIN_UUID + "/object/hosts?bulk=true"
+            	host_url = "https://" + address + host_api_uri
+            	headers = {'Content-Type': 'application/json', 'x-auth-access-token': accesstoken}
+            	print(headers)
+            	
+            	
+            	if host != []:
+            		response = requests.request("POST", host_url, headers=headers, data=host_payload, verify=False)
+            	else:
+            		print("Please Validate that the CSV file provided is correct or at correct location")
+            	
+            	if response.status_code == 201 or response.status_code == 202:
+            		print("Host Objects successfully pushed")
+            	else:
+            		print("Host Object creation failed")
+
+            return render_template('index.html', csv_url=csv_url)
+        else:
+            return ''' <p>許可されていない拡張子です</p> '''
+    else:
+        return redirect(url_for('index'))
+        
+if __name__ == '__main__':
+    app.debug = True
+    app.run()
