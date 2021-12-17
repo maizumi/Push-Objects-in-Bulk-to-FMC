@@ -1,21 +1,21 @@
 # FMC
 REST API for FMC
-
+<br>
 This python code works in Python3
-
-Because this web app is based on Flask framewrok, folders and hierarchy is important.
-
+<br>
+Because this web app is based on Flask framework, folders and hierarchy is important.
+<br><br>
 Hierarchy should be like below.
-
-fmc_bulk_object.py
- L templates
-    L index.html
-    L base.html
- L static
-    L securefw.jpg
- L uploads
-    L {files will be uploaded here}
-    
+<br><br>
+fmc_bulk_object.py<br>
+ L templates <br>
+&emsp;    L index.html <br>
+&emsp;    L base.html <br>
+ L static <br>
+&emsp;    L securefw.jpg <br>
+ L uploads <br>
+&emsp;    L {files will be uploaded here}<br>
+    <br>
 for libraries, please install using requirements.txt
-
+<br>
 pip install -r requirements.txt
