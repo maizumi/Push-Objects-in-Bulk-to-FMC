@@ -8,9 +8,9 @@ from getpass import getpass
 #username = input ("Enter Username: ")
 #password = getpass("Enter Password: ")
 
-address = "10.71.132.226"
-username = "admin"
-password = "C1sco12345!"
+address = ""
+username = ""
+password = ""
 
 api_uri = "/api/fmc_platform/v1/auth/generatetoken"
 url = "https://" + address + api_uri
