@@ -1,5 +1,5 @@
 # FMC
-REST API for FMC
+Bulk Object Push API API for FMC
 <br>
 This python code works in Python3
 <br>
