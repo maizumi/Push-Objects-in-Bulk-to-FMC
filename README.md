@@ -1,7 +1,9 @@
 # FMC
 Bulk Object Push API for FMC
 <br>
-This python code works in Python3
+This python code works in Python3 and I just followed step by step instruction based on the site below.
+https://www.cisco.com/c/en/us/support/docs/security/firepower-management-center/215972-push-objects-in-bulk-to-fmc-using-rest-a.html
+
 <br>
 Because this web app is based on Flask framework, folders and hierarchy is important.
 <br><br>
