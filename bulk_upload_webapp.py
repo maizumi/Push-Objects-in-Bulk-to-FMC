@@ -42,9 +42,6 @@ def send():
             fmc_username = request.form.get('fmc_username')
             fmc_password = request.form.get('fmc_password')
          
-            #address = "192.168.1.1"
-            #username = "admin"
-            #password = "C1sco12345!"
             address = fmc_ip
             username = fmc_username
             password = fmc_password
